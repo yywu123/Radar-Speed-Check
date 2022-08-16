@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+            {% load static %}
+        <style>
+            .logo{
+               width : 140px ;
+            }
+
+            .header{
+                display : flex ;
+                justify-content : space-between;
+                align-items : center;
+                padding : 30px 10% ;
+            }
+
+            html, body {
+    height: 100%;
+    margin: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+
+        </style>
+
+
+</head>
+<body>
+
+<div class="header">
+    <a href="{% url 'home'  %}">
+    <img src="{% static 'image/logo.png' %}" class="logo left"  >
+        </a>
+    <h1 class = "title">Radar Speed Check</h1>
+     <a href="{% url 'home'  %}">
+    <img src="{% static 'image/logo.png' %}" class="logo left"  >
+        </a>
+</div>
+
+<hr>
+{% block content%}
+
+
+{% endblock %}
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+</body>
+</html>

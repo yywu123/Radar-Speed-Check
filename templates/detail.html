@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+    {% block content%}
+
+    <style>
+        .but{
+          margin : 30px ;
+          text-align : center ;
+        }
+
+        .table {
+        margin : 0 auto ;
+        width : 80% ;
+        text-align : center ;
+        }
+
+        .information{
+         margin-top : 20px ;
+         text-align :center;
+        }
+
+       .footer{
+        position: fixed;
+
+            bottom: 0;
+            width: 100%;
+            height: 150px;
+
+
+        }
+
+    </style>
+</head>
+<body>
+
+
+<div class = "information">
+    <div class="row">
+    <h3 class="col">Date: {{item.date}} </h3>
+    <h3 class="col"> Posted Speed: {{item.speed}}</h3>
+        <h3 class="col" >Weather: {{ item.weather}} </h3>
+        </div>
+
+    <div class="row">
+        <h3 class="col">Surveyor: {{item.surveyor}}</h3>
+  <h3 class="col">Borough: {{item.borough}}</h3>
+    <h3 class="col">Location: {{item.location}}</h3>
+        </div>
+
+</div>
+
+<br>
+
+<div class="but ">
+    <a class="btn btn-primary btn-lg"  style = "margin-right : 20px"  href="{% url 'createTimeSheet'  %}?item_num={{item.id}}"> Add New</a>
+          <a
+        class="btn btn-primary btn-lg "
+        href="{% url 'detailView' item.id  %}"
+      >
+        Form Sheet
+      </a>
+</div>
+
+
+
+<div class="bd-example">
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+
+            <th scope="col">Time</th>
+            <th scope="col">Carrier</th>
+            <th scope="col">MPH</th>
+            <th scope="col">Remarks</th>
+            <th scope="col">Bus#</th>
+            <th scope="col">Route</th>
+            <th scope="col">Management</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for d in details %}
+        <tr>
+
+
+            <td>{{d.time}}</td>
+            <td>{{d.carrier}}</td>
+
+            {% if d.mph > item.speed %}
+                <td style="color : red">{{d.mph}}</td>
+            {% else %}
+                <td >{{d.mph}}</td>
+            {% endif %}
+
+
+            <td>{{d.get_remarks_display}}</td>
+            <td>{{d.bus}}</td>
+            <td>{{d.route}}</td>
+            <td>
+
+                <a class="btn btn-success btn-xs" href="{% url 'updateTimeSheet' d.id %}"> Edit</a>
+                <a class="btn btn-danger btn-xs" href="{% url 'deleteTimeSheet' d.id %}"> Delete</a>
+
+            </td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+    <br>
+    <br>
+</div>
+
+
+<div class="footer">
+    <br>
+    <hr>
+    <br>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+
+
+            {% if details.has_previous %}
+
+            <li class="page-item"><a href="?page1" class="page-link">&laquo First </a></li>
+            <li class="page-item"><a href="?page={{details.previous_page_number}}" class="page-link">Previous </a></li>
+
+            {% endif %}
+            <li class="page-item disabled"><a href="#" class="page-link"> Page {{details.number}} of
+                {{details.paginator.num_pages}}</a></li>
+
+            {% if details.has_next %}
+            <li class="page-item"><a href="?page={{details.next_page_number}}" class="page-link">next</a></li>
+            <li class="page-item"><a href="?page={{details.paginator.num_pages}}" class="page-link">Last &raquo</a></li>
+
+            {% endif %}
+
+        </ul>
+    </nav>
+
+</div>
+
+
+
+{% endblock %}
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+
+
+</body>
+</html>
