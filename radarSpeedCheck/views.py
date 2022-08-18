@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.shortcuts import render, redirect
 from .forms import ItemForm, TimeSheetForm
 from .models import TimeSheet, CheckItem
@@ -75,7 +77,13 @@ def deleteItem(request, pk):
 
 
 def createTimeSheet(request):
-    form = TimeSheetForm()
+
+
+    item_num = request.GET.get('item_num')
+    initial_data = {
+        'item' : CheckItem.objects.get(id=item_num),
+        'time' : datetime.now()
+    }
 
     if request.method == 'POST':
         form = TimeSheetForm(request.POST)
@@ -86,7 +94,7 @@ def createTimeSheet(request):
             url = '/detail/{}/'.format(item_num)
             return redirect(url)
 
-
+    form = TimeSheetForm(initial=initial_data)
     context = {'form': form}
     return render(request, 'TimeSheet_form.html', context)
 

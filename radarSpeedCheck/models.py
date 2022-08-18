@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 
 # Create your models here.
@@ -22,7 +24,7 @@ class CheckItem(models.Model):
 
 class TimeSheet(models.Model):
     item = models.ForeignKey(to='CheckItem', on_delete=models.CASCADE)
-    time = models.TimeField(blank=False)
+    time = models.TimeField()
     carrier = models.CharField(max_length=10)
     mph = models.IntegerField()
     remarks_list = (

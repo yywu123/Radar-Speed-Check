@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.forms import ModelForm
 from .models import CheckItem, TimeSheet
 from django import forms
@@ -6,7 +8,7 @@ from django import forms
 
 class ItemForm(ModelForm):
 
-    class Meta :
+    class Meta:
 
         model = CheckItem
         fields = '__all__'
@@ -24,20 +26,22 @@ class ItemForm(ModelForm):
 
 class TimeSheetForm(ModelForm):
 
-    class Meta:
+    time = forms.TimeField( widget = forms.TextInput(attrs={'type': 'time'}))
 
+
+
+
+    class Meta:
         model = TimeSheet
         fields = '__all__'
 
-        widgets = {
-            'time': forms.TextInput(attrs={'type': 'time'}),
-        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.fields['item'].disabled = True
+
         for name, field in self.fields.items():
             field.widget.attrs = {'class': "form-control"}
-
 
 
