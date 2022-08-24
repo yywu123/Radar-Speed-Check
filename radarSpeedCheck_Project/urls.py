@@ -21,4 +21,5 @@ urlpatterns = [
     path('', include('radarSpeedCheck.urls')),
 
 
+
 ]

@@ -9,6 +9,66 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator
 
 
+import os
+from django.conf import settings
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.contrib.staticfiles import finders
+
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from io import BytesIO
+from xhtml2pdf import pisa
+
+
+
+
+
+def render_pdf_view(request, pk):
+    item = CheckItem.objects.get(id=pk)
+    detail = TimeSheet.objects.filter(item=pk)
+
+    content = {'item': item, 'details': detail}
+
+    template_path = 'print_PDF.html'
+
+    # Create a Django response object, and specify content_type as pdf
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = ' filename="report.pdf"'
+    # find the template and render it.
+    template = get_template(template_path)
+    html = template.render(content)
+
+    # create a pdf
+    pisa_status = pisa.CreatePDF(
+        html, dest=response)
+    # if error then show some funny view
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
+
+
+def render_pdf(request, pk):
+    path =  'print_PDF.html'
+    item = CheckItem.objects.get(id=pk)
+    detail = TimeSheet.objects.filter(item=pk)
+
+    content = {'item': item, 'details': detail}
+
+
+    html = render_to_string(path, content)
+    io_bytes = BytesIO()
+
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), io_bytes)
+
+    if not pdf.err:
+        return HttpResponse(io_bytes.getvalue(), content_type='application/pdf')
+    else:
+        return HttpResponse("Error while rendering PDF", status=400)
+
+
 def home(request):
     item = CheckItem.objects.all()
     page_num = 6
@@ -137,10 +197,17 @@ def detailView(request, pk):
     page = request.GET.get('page')
     detail_list = p.get_page(page)
 
+    content = {'item': item, 'details': detail }
+
+    return render(request, 'view_sheet.html', content)
 
 
+def printPDF(request, pk ):
+    item = CheckItem.objects.get(id=pk)
+    detail = TimeSheet.objects.filter(item=pk)
     content = {'item': item, 'details': detail }
 
 
 
-    return render(request, 'view_sheet.html', content)
+
+    return render(request,'print_PDF.html', content)

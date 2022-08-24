@@ -1,142 +1,157 @@
 <!DOCTYPE html>
 
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Radar Speed Check</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 
 
     <!--Date Table CSS -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-html5-2.2.3/b-print-2.2.3/r-2.3.0/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-html5-2.2.3/b-print-2.2.3/r-2.3.0/datatables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css
-"/>
+" />
 
     {% load static %}
 
     <style>
-        .but{
-          margin : 30px ;
-          text-align : center ;
+        .but {
+            margin: 30px;
+            text-align: center;
         }
 
         .table {
-        margin : 0 auto ;
+            margin: 0 auto;
 
-        text-align : center ;
+            text-align: center;
         }
 
-        .information{
-         margin-top : 20px ;
-         text-align :center;
+        .information {
+            margin-top: 20px;
+            text-align: center;
         }
 
-       .footer{
-        position: fixed;
+        .footer {
+            position: fixed;
 
             bottom: 0;
             width: 100%;
             height: 150px;
 
         }
-          .logo{
-               width : 140px ;
-            }
 
-            .header{
-                display : flex ;
-                justify-content : space-between;
-                align-items : center;
-                padding : 30px 10% ;
-            }
+        .logo {
+            width: 140px;
+        }
 
-            .dataTables_paginate{
-              text-align : center !important ;
-                margin-top : 20px !important ;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 10%;
+        }
 
-            }
-            .dataTables_filter{
-                margin-bottom : 10px !important ;
-            }
+        .dataTables_paginate {
+            text-align: center !important;
+            margin-top: 20px !important;
+
+        }
+
+        .dataTables_filter {
+            float: left !important;
+
+        }
+
+        .dataTables_length {
+            float: left !important;
+            margin-right: 380px !important;
 
 
 
+        }
+
+        .dt-buttons {
+            float: right !important;
+        }
     </style>
 </head>
+
 <body>
-<div class="header">
-    <a href="{% url 'home'  %}">
-    <img src="{% static 'image/logo.png' %}" class="logo left"  >
+    <div class="header">
+        <a href="{% url 'home'  %}">
+            <img src="{% static 'image/logo.png' %}" class="logo left">
         </a>
-    <h1 class = "title">Radar Speed Check</h1>
-     <a href="{% url 'home'  %}">
-    <img src="{% static 'image/logo.png' %}" class="logo left"  >
+        <h1 class="title">Radar Speed Check</h1>
+        <a href="{% url 'home'  %}">
+            <img src="{% static 'image/logo.png' %}" class="logo left">
         </a>
-</div>
+    </div>
 
-<hr>
+    <hr>
 
-<div class = "information">
-    <div class="row">
-    <h3 class="col">Date: {{item.date}} </h3>
-    <h3 class="col"> Posted Speed: {{item.speed}}</h3>
-        <h3 class="col" >Weather: {{ item.weather}} </h3>
+    <div class="information">
+        <div class="row">
+            <h3 class="col">Date: {{item.date}} </h3>
+            <h3 class="col"> Posted Speed: {{item.speed}}</h3>
+            <h3 class="col">Weather: {{ item.weather}} </h3>
         </div>
 
-    <div class="row">
-        <h3 class="col">Surveyor: {{item.surveyor}}</h3>
-  <h3 class="col">Borough: {{item.borough}}</h3>
-    <h3 class="col">Location: {{item.location}}</h3>
+        <div class="row">
+            <h3 class="col">Surveyor: {{item.surveyor}}</h3>
+            <h3 class="col">Borough: {{item.borough}}</h3>
+            <h3 class="col">Location: {{item.location}}</h3>
         </div>
 
-</div>
-<br>
-
-
-
-<div class="container">
-    <table class="table table-striped table-hover" id = "ta">
-        <thead >
-        <tr >
-
-            <th scope="col" style="text-align : center ">Time</th>
-            <th scope="col" style="text-align : center ">Carrier</th>
-            <th scope="col" style="text-align : center ">MPH</th>
-            <th scope="col" style="text-align : center ">Remarks</th>
-            <th scope="col" style="text-align : center ">Bus#</th>
-            <th scope="col" style="text-align : center ">Route</th>
-
-        </tr>
-        </thead>
-        <tbody>
-        {% for d in details %}
-        <tr>
-
-
-            <td>{{d.time}}</td>
-            <td>{{d.carrier}}</td>
-
-            {% if d.mph > item.speed %}
-                <td style="color : red">{{d.mph}}</td>
-            {% else %}
-                <td >{{d.mph}}</td>
-            {% endif %}
-
-
-            <td>{{d.get_remarks_display}}</td>
-            <td>{{d.bus}}</td>
-            <td>{{d.route}}</td>
-
-        </tr>
-        {% endfor %}
-
-        </tbody>
-
-    </table>
+    </div>
     <br>
-    <br>
-</div>
+
+
+
+    <div class="container">
+        <table class="table table-striped table-hover" id="ta">
+            <thead>
+                <tr>
+
+                    <th scope="col" style="text-align : center ">Time</th>
+                    <th scope="col" style="text-align : center ">Carrier</th>
+                    <th scope="col" style="text-align : center ">MPH</th>
+                    <th scope="col" style="text-align : center ">Remarks</th>
+                    <th scope="col" style="text-align : center ">Bus#</th>
+                    <th scope="col" style="text-align : center ">Route</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in details %}
+                <tr>
+
+
+                    <td>{{d.time}}</td>
+                    <td>{{d.carrier}}</td>
+
+                    {% if d.mph > item.speed %}
+                    <td style="color : red">{{d.mph}}</td>
+                    {% else %}
+                    <td>{{d.mph}}</td>
+                    {% endif %}
+
+
+                    <td>{{d.get_remarks_display}}</td>
+                    <td>{{d.bus}}</td>
+                    <td>{{d.route}}</td>
+
+                </tr>
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+        <br>
+        <br>
+    </div>
 
 
 
@@ -145,40 +160,97 @@
 
 
 
-<!--Boostrap JS-->
+    <!--Boostrap JS-->
 
 
-<!-- j Query JS-->
+    <!-- j Query JS-->
 
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
-<!-- Datatable  JS-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    <!-- Datatable  JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
         crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-html5-2.2.3/b-print-2.2.3/r-2.3.0/datatables.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-html5-2.2.3/b-print-2.2.3/r-2.3.0/datatables.min.js"></script>
 
 
 
-<script>
+    <script>
+        $(document).ready(function () {
+            $('#ta').DataTable({
+                searching: true,
+                autoWidth: true,
+                pageLength: 10,
+                responsive: true,
+
+                fixedHeader:{
+                    header: true,
+                },
 
 
-   $(document).ready(function(){
-       $('#ta').DataTable({
-        searching : true,
-        autoWidth : true,
-         pageLength: 10,
-         responsive : true ,
+                dom: 'lBfrtip',
+                buttons: [
+                    {
+                        extend: 'print',
+                        text: '<i class="fas fa-print">',
+                        className: 'btn btn-secondary',
+                        titleAttr: 'Print',
 
-    
+                        customize: function (win) {
+                            $(win.document.body)
+                                .css('font-size', '10pt');
 
-       })
 
-   });
-</script>
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+
+                              $(win.document.body).find('table tbody td:nth-child(1)').css('text-align', 'left');
+                              $(win.document.body).find('table tbody td:nth-child(2)').css('text-align', 'left');
+                              $(win.document.body).find('table tbody td:nth-child(3)').css('text-align', 'left');
+                              $(win.document.body).find('table tbody td:nth-child(4)').css('text-align', 'left');
+                              $(win.document.body).find('table tbody td:nth-child(5)').css('text-align', 'left');
+                              $(win.document.body).find('table tbody td:nth-child(6)').css('text-align', 'left');
+
+
+                        },
+
+
+                    },
+                    {
+                        extend: 'excel',
+                        text: '<i class="fas fa-file-excel">',
+                        className: 'btn btn-secondary',
+                        titleAttr: 'Excel',
+
+                    },
+
+                    {
+                        extend: 'pdf',
+                        text: '<i class="fas fa-file-pdf">',
+                        className: 'btn btn-secondary',
+                        titleAttr: 'Pdf',
+
+                        customize: function (doc) {
+                            doc.styles.tableBodyOdd.alignment = 'center';
+                            doc.styles.tableBodyEven.alignment = 'center';
+
+                            doc.content[1].table.widths = Array(doc.content[1].table.body[1].length + 1).join('*').split('');
+                        },
+                    }
+]
+
+            })
+
+
+        });
+    </script>
 
 
 </body>
+
 </html>

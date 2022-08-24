@@ -26,7 +26,7 @@ class ItemForm(ModelForm):
 
 class TimeSheetForm(ModelForm):
 
-    time = forms.TimeField( widget = forms.TextInput(attrs={'type': 'time'}))
+    time = forms.TimeField(widget=forms.TextInput(attrs={'type': 'time'}))
 
 
 
@@ -38,9 +38,7 @@ class TimeSheetForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.fields['item'].disabled = True
-
         for name, field in self.fields.items():
             field.widget.attrs = {'class': "form-control"}
 
